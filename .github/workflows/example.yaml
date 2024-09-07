@@ -1,6 +1,10 @@
 # Action操作名称
 name: CI
 
+# 权限
+permissions:
+  contents: write
+
 # 触发事件
 on:
   push:
@@ -15,19 +19,15 @@ on:
 jobs:
   # 任务"build"
   build:
-    # 运行作业的服务器系统
-    runs-on: ubuntu-latest
-    # 步骤
-    steps:
-      # Action插件(v4版本)：将仓库的所有文件都可被访问
-      - uses: actions/checkout@v4
+    runs-on: ubuntu-latest # 运行作业的服务器系统
+    steps: # 运行作业的服务器系统
+      - uses: actions/checkout@v4 # Action插件(v4版本)：将仓库的所有文件都可被访问
 
-      # 运行命令
-      - name: cat index
-        run: cat index.js
-
-      # 运行多条命令
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      # 部署步骤
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: deploy # 仓库内需要部署的目录，且不会部署`.gitignore`内的文件
+          branch: deploy # 部署到deploy分支
+          commit-message: "deploy: push config or rules through action"
+          dry-run: true
