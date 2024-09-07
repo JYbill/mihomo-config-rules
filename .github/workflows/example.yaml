@@ -30,4 +30,3 @@ jobs:
           folder: deploy # 仓库内需要部署的目录，且不会部署`.gitignore`内的文件
           branch: deploy # 部署到deploy分支
           commit-message: "deploy: push config or rules through action"
-          dry-run: true
