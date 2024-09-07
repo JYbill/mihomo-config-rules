@@ -1,0 +1,153 @@
+# 完整配置参考：https://github.com/MetaCubeX/mihomo/blob/Meta/docs/config.yaml
+# clash verge rev全局配置
+dns:
+  use-system-hosts: false
+  enable: true
+  ipv6: true
+  use-hosts: true
+  respect-rules: false # dns根据rules代理，让代理服务器帮助走nameserver、fallback...
+  enhanced-mode: fake-ip
+
+  # 额外允许的特殊DNS写法
+  # system：读取系统的DNS，如果系统不存在则抛出错误且跳过
+  # rcode: rcode用于应用发起DNS查询时立即返回相应代码结束查询，写法：rcode://success表示不去进行DNS查询，视本地DNS解析器缓存中存在该域名（💡一般拦截广告用）
+  default-nameserver: # 兜底nameserver域名情况
+    - 101.226.4.6 # 360
+  proxy-server-nameserver: # 由代理服务器查询dns时，查询代理服务器的dns解析
+    - 1.1.1.1
+  # 优先于nameserver/fallback规则
+  nameserver-policy:
+    # 国外网站避免DNS污染
+    'geosite:gfw,greatfire': [1.1.1.1, 8.8.8.8] 
+    'rule-set:gfw': [1.1.1.1, 8.8.8.8]
+    'rule-set:daily-foreign': [1.1.1.1, 8.8.8.8]
+    # 国内走国内快速连接
+    'geosite:cn': [119.29.29.29]
+    'rule-set:icloud,apple,direct,applications': [119.29.29.29]
+    # 💡 rule-set要求：behavior必须为domain/classical，且仅生效域名部分！！！
+    # 对于"rule-providers"规则表中的"gfw"下所有的域名全部走指定的DNS
+    # 'geosite:geolocation-!cn': [1.1.1.1] # 对于"非"国内geosite
+    # "geosite:category-ads-all": rcode://success # 对于"category-ads-all"规则DNS全部返回
+  # 默认DNS
+  nameserver:
+    - 202.103.44.150 # 湖北电信DNS
+    - 211.137.58.20 # 湖北移动DNS
+    # - 101.226.4.6 # 360
+    # - 119.29.29.29 # 腾讯
+  # 国外DNS
+  fallback: 
+    - 8.8.8.8
+    - 1.1.1.1
+  fallback-filter:
+    geoip: true
+    geoip-code: CN # 当geo数据查询域名属于CN标识时，不使用fallback而是用nameserver
+
+# GEO相关内容默认采用 https://github.com/Loyalsoldier开发的
+  # https://github.com/Loyalsoldier/v2ray-rules-dat
+
+# 参考：https://github.com/Loyalsoldier/clash-rules?tab=readme-ov-file
+rule-providers:
+  reject:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    path: ./ruleset/reject.yaml
+    interval: 86400
+
+  icloud:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
+    path: ./ruleset/icloud.yaml
+    interval: 86400
+
+  apple:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
+    path: ./ruleset/apple.yaml
+    interval: 86400
+
+  google:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
+    path: ./ruleset/google.yaml
+    interval: 86400
+
+  proxy:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+    path: ./ruleset/proxy.yaml
+    interval: 86400
+
+  direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./ruleset/direct.yaml
+    interval: 86400
+
+  private:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
+    path: ./ruleset/private.yaml
+    interval: 86400
+
+  gfw:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+
+  tld-not-cn:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
+    path: ./ruleset/tld-not-cn.yaml
+    interval: 86400
+
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
+    path: ./ruleset/cncidr.yaml
+    interval: 86400
+
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+    path: ./ruleset/lancidr.yaml
+    interval: 86400
+
+  applications:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
+    path: ./ruleset/applications.yaml
+    interval: 86400
+
+  # 自定义的开发直连环境
+  dev-direct:
+    type: file
+    behavior: classical
+    path: ./ruleset/dev-direct.yaml
+    format: yaml
+    interval: 86400
+  daily-foreign:
+    type: file
+    behavior: classical
+    path: ./ruleset/daily-foreign.yaml
+    format: yaml
+    interval: 86400
