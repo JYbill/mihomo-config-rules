@@ -140,14 +140,17 @@ rule-providers:
 
   # 自定义的开发直连环境
   dev-direct:
-    type: file
+    type: http
     behavior: classical
+    url: https://jybill.github.io/mihomo-config-rules/rule-set/dev-direct.yaml
     path: ./ruleset/dev-direct.yaml
     format: yaml
     interval: 86400
+
   daily-foreign:
-    type: file
+    type: http
     behavior: classical
+    url: https://jybill.github.io/mihomo-config-rules/rule-set/daily-foreign.yaml
     path: ./ruleset/daily-foreign.yaml
     format: yaml
     interval: 86400
