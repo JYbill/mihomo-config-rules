@@ -2,15 +2,15 @@ payload:
   # 前端react
   - DOMAIN-KEYWORD,umijs.org
   # dbdiagram相关（DBML数据库建模可视化）
-  - DOMAIN,dbdiagram.chargebeestaticv2.com,DIRECT
-  - DOMAIN-KEYWORD,dbdiagram,DIRECT
+  - DOMAIN,dbdiagram.chargebeestaticv2.com
+  - DOMAIN-KEYWORD,dbdiagram
   # CDN
-  - DOMAIN-SUFFIX,jsdelivr.com,DIRECT
+  - DOMAIN-SUFFIX,jsdelivr.com
   # 影视
-  - DOMAIN-SUFFIX,vplay.life,DIRECT
+  - DOMAIN-SUFFIX,vplay.life
   # 苹果
-  - PROCESS-NAME,Maps,DIRECT
-  - PROCESS-NAME,com.apple.geod,DIRECT
-  - DOMAIN-SUFFIX,ls.apple.com,DIRECT
-  - DOMAIN-SUFFIX,push.apple.com,DIRECT
+  - PROCESS-NAME,Maps
+  - PROCESS-NAME,com.apple.geod
+  - DOMAIN-SUFFIX,ls.apple.com
+  - DOMAIN-SUFFIX,push.apple.com
   

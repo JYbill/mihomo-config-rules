@@ -1,8 +1,11 @@
 payload:
-  - DOMAIN-SUFFIX,raycast.com
   - DOMAIN-SUFFIX,icoa.cn
   - DOMAIN-SUFFIX,icoa.vip
   - DOMAIN-SUFFIX,colab.dev
   # vscode forward port 端口转发插件
   - DOMAIN-KEYWORD,devtunnels
+  # notion
+  - PROCESS-NAME,Notion Helper
+  - PROCESS-NAME,verge-mihomo
+  - PROCESS-NAME,Raycast
   
