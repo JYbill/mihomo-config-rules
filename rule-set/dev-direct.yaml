@@ -1,6 +1,7 @@
 payload:
-  # 前端react
+  # 前端
   - DOMAIN-KEYWORD,umijs.org
+  - DOMAIN-SUFFIX,prettier.io
   # dbdiagram相关（DBML数据库建模可视化）
   - DOMAIN,dbdiagram.chargebeestaticv2.com
   - DOMAIN-KEYWORD,dbdiagram
