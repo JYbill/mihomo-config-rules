@@ -8,7 +8,8 @@ function main(config, profileName) {
   // 魔戒:'🚀 节点选择'
   // TGA:'♻️ 手动切换'
   // Freecat 🐾自由猫
-  const activeProfileName = "♻️ 手动切换";
+  const firstGroupName = config["proxy-groups"][0]["name"];
+  const activeProfileName = firstGroupName || '🚀 节点选择';
 
   // 创建代理
   const proxyUSAList = config.proxies.filter((item) => item.name.match(/新加坡/gi)).map((item) => item.name);
