@@ -6,7 +6,6 @@ payload:
   - DOMAIN-KEYWORD,dbdiagram
   # CDN
   - DOMAIN-SUFFIX,jsdelivr.com
-  - DOMAIN-KEYWORD,cdn.com
   # 影视
   - DOMAIN-SUFFIX,vplay.life
   # 苹果
