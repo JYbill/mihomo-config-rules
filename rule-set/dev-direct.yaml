@@ -14,4 +14,6 @@ payload:
   - PROCESS-NAME,com.apple.geod
   - DOMAIN-SUFFIX,ls.apple.com
   - DOMAIN-SUFFIX,push.apple.com
+  # proxy运营商
+  - DOMAIN-SUFFIX,cengot.com
   
