@@ -15,4 +15,6 @@ payload:
   - DOMAIN-SUFFIX,push.apple.com
   # proxy运营商
   - DOMAIN-SUFFIX,cengot.com
+  # 翻译软件
+  - PROCESS-NAME,网易有道翻译
   
