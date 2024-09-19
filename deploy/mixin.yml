@@ -13,8 +13,8 @@ dns:
   # rcode: rcode用于应用发起DNS查询时立即返回相应代码结束查询，写法：rcode://success表示不去进行DNS查询，视本地DNS解析器缓存中存在该域名（💡一般拦截广告用）
   default-nameserver: # 兜底nameserver域名情况
     - 101.226.4.6 # 360
-  proxy-server-nameserver: # 由代理服务器查询dns时，查询代理服务器的dns解析（对于某些代理DNS会被ISP更改，最好用tls）
-    - tls://dot.pub
+  proxy-server-nameserver: # 由代理服务器查询dns时，查询代理服务器的dns解析（对于某些代理DNS会被ISP更改，最好用tls/ip）
+    - tls://1.12.12.12 # 避免走DNS查询，直接TLS/IP代理，避免中间路由器的分析
   # 优先于nameserver/fallback规则
   nameserver-policy:
     # 国外网站避免DNS污染
