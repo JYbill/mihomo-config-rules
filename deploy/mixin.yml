@@ -18,6 +18,7 @@ dns:
   # 优先于nameserver/fallback规则
   nameserver-policy:
     # 国外网站避免DNS污染
+    'geosite:openai,google,anthropic': [1.1.1.1, 8.8.8.8]
     'geosite:gfw,greatfire': [1.1.1.1, 8.8.8.8] 
     'rule-set:gfw': [1.1.1.1, 8.8.8.8]
     'rule-set:daily-foreign': [1.1.1.1, 8.8.8.8]
