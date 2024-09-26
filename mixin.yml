@@ -1,5 +1,5 @@
 # 完整配置参考：https://github.com/MetaCubeX/mihomo/blob/Meta/docs/config.yaml
-# clash verge rev全局配置
+
 dns:
   use-system-hosts: false
   enable: true
@@ -7,41 +7,36 @@ dns:
   use-hosts: true
   respect-rules: false # dns根据rules代理，让代理服务器帮助走nameserver、fallback...
   enhanced-mode: fake-ip
-
-  # 额外允许的特殊DNS写法
-  # system：读取系统的DNS，如果系统不存在则抛出错误且跳过
-  # rcode: rcode用于应用发起DNS查询时立即返回相应代码结束查询，写法：rcode://success表示不去进行DNS查询，视本地DNS解析器缓存中存在该域名（💡一般拦截广告用）
   default-nameserver: # 兜底nameserver域名情况
-    - 101.226.4.6 # 360
-  proxy-server-nameserver: # 由代理服务器查询dns时，查询代理服务器的dns解析（对于某些代理DNS会被ISP更改，最好用tls/ip）
-    - tls://1.12.12.12 # 避免走DNS查询，直接TLS/IP代理，避免中间路由器的分析
+    - 1.1.1.1
+  proxy-server-nameserver: # 由代理服务器查询dns时，查询代理服务器的dns解析（对于某些代理DNS会被ISP更改，最好用tls）
+    # 由于运营商会根据tls://域名，其中域名会走default-nameserver，DNS明文查询，这里运营商会拦截所有海外的DOT/DOH，所以这里最好用IP国内即可
+    # 推荐：后续的DOT/DOH最好用IP而不是域名，避免被ISP拦截，导致DOH/DOT被污染
+    - tls://1.12.12.12
+    - tls://120.53.53.53
+    # - tls://1.1.1.1
+    # - tls://1.0.0.1
   # 优先于nameserver/fallback规则
   nameserver-policy:
-    # 国外网站避免DNS污染
-    'geosite:openai,google,anthropic': [1.1.1.1, 8.8.8.8]
-    'geosite:gfw,greatfire': [1.1.1.1, 8.8.8.8] 
-    'rule-set:gfw': [1.1.1.1, 8.8.8.8]
-    'rule-set:daily-foreign': [1.1.1.1, 8.8.8.8]
-    # 国内走国内快速连接
-    'geosite:cn': [119.29.29.29]
+    'geosite:openai,google,anthropic': [tls://1.1.1.1]
+    'geosite:cn': [119.29.29.29] # 对国内geosite
     'rule-set:icloud,apple,direct,applications': [119.29.29.29]
-    # 💡 rule-set要求：behavior必须为domain/classical，且仅生效域名部分！！！
-    # 对于"rule-providers"规则表中的"gfw"下所有的域名全部走指定的DNS
-    # 'geosite:geolocation-!cn': [1.1.1.1] # 对于"非"国内geosite
-    # "geosite:category-ads-all": rcode://success # 对于"category-ads-all"规则DNS全部返回
+    'geosite:gfw,greatfire': [tls://1.1.1.1] # 对geosite中的gfw、greatfire
+    'rule-set:gfw': [tls://1.1.1.1]
   # 默认DNS
   nameserver:
-    - 202.103.44.150 # 湖北电信DNS
-    - 211.137.58.20 # 湖北移动DNS
-    # - 101.226.4.6 # 360
-    # - 119.29.29.29 # 腾讯
+    - 119.29.29.29
+    # - tls://1.1.1.1
+    # - tls://1.0.0.1
+    # - https://1.1.1.1/dns-query
+    # - https://1.0.0.1/dns-query
   # 国外DNS
-  fallback: 
-    - 8.8.8.8
-    - 1.1.1.1
-  fallback-filter:
-    geoip: true
-    geoip-code: CN # 当geo数据查询域名属于CN标识时，不使用fallback而是用nameserver
+  # fallback: 
+  #   - 8.8.8.8
+  #   - 1.1.1.1
+  # fallback-filter:
+  #   geoip: true
+  #   geoip-code: CN
 
 # GEO相关内容默认采用 https://github.com/Loyalsoldier开发的
   # https://github.com/Loyalsoldier/v2ray-rules-dat
