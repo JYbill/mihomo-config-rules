@@ -23,15 +23,15 @@ function main(config, profileName) {
     });
     config["rules"].unshift(
       // 第一层：明确
-      `RULE-SET,reject,REJECT`,
       `DOMAIN,clash.razord.top,DIRECT`,
       `DOMAIN,yacd.haishan.me,DIRECT`,
       `RULE-SET,icloud,DIRECT`,
       `RULE-SET,apple,DIRECT`,
+      `GEOSITE,cloudflare-cn,DIRECT`,
+      `GEOSITE,cloudflare,${activeProfileName}`,
       `DOMAIN,auth.openai.com,${aiProxyGroup}`,
       `DOMAIN-KEYWORD,openai,${aiProxyGroup}`,
       `GEOSITE,openai,${aiProxyGroup}`,
-      `DOMAIN-SUFFIX,cloudflare.com,${activeProfileName}`,
       `DOMAIN-KEYWORD,gemini,${aiProxyGroup}`,
       `GEOSITE,anthropic,${aiProxyGroup}`,
       `GEOSITE,github,${activeProfileName}`,
