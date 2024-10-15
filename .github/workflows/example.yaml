@@ -9,15 +9,6 @@ permissions:
 on:
   push:
     branches: [ "main" ] # 针对main分支
-  schedule:
-    # 1. 工作流运行期间负载过高时可能会延迟
-    # 2. 默认分支上有文件才能执行
-    # 3. 只执行默认分支上的文件
-    # 4. 60天内未发生仓库活动将停止定时器
-    - cron: "0 2 * * *" # 定时任务: "minute hour day month week(周几)"，每天凌晨2点执行
-
-  # 允许您从"Actions"选项卡手动运行此工作流
-  workflow_dispatch:
 
 # 工作流
 jobs:
