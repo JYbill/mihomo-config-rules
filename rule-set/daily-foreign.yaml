@@ -8,7 +8,6 @@ payload:
   - DOMAIN-KEYWORD,prettier
   - DOMAIN-KEYWORD,eslint
   # notion
-  - PROCESS-NAME,Notion Helper
   - PROCESS-NAME,verge-mihomo
   - PROCESS-NAME,Raycast
   - PROCESS-NAME,Discord Helper
