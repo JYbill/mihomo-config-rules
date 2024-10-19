@@ -18,4 +18,6 @@ payload:
   - DOMAIN-SUFFIX,cengot.com
   # 翻译软件
   - PROCESS-NAME,网易有道翻译
+  # notion
+  - PROCESS-NAME,Notion Helper
   
