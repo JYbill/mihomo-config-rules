@@ -55,6 +55,8 @@ dns:
   # fallback-filter:
   #   geoip: true
   #   geoip-code: CN
+  #   ipcidr: # 当DNS响应为ipcidr包含的IP时，即意味着被该域名对应的IP已被污染，会再次走fallback DNS查询，得到真实IP
+  #     - ...
 
 # GEO相关内容默认采用 https://github.com/Loyalsoldier开发的
   # https://github.com/Loyalsoldier/v2ray-rules-dat
