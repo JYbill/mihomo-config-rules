@@ -4,12 +4,12 @@ payload:
   - DOMAIN-SUFFIX,icoa.cn
   - DOMAIN-SUFFIX,icoa.vip
   - DOMAIN-SUFFIX,colab.dev
-  # vscode forward port 端口转发插件
+  
   - DOMAIN-KEYWORD,devtunnels
-  # 开发
+
   - DOMAIN-KEYWORD,prettier
   - DOMAIN-KEYWORD,eslint
-  # notion
+  
   - PROCESS-NAME,Notion Helper
   - PROCESS-NAME,verge-mihomo
   - PROCESS-NAME,Raycast
