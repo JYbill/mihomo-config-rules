@@ -1,7 +1,8 @@
 payload:
   # 开发
   - DOMAIN-KEYWORD,umijs
-  - DOMAIN-SUFFIX,jybill.top
+  - DOMAIN,alist.xiaoqinvar.cn
+  - DOMAIN,certd.xiaoqinvar.cn
   # dbdiagram相关（DBML数据库建模可视化）
   - DOMAIN,dbdiagram.chargebeestaticv2.com
   - DOMAIN-KEYWORD,dbdiagram
