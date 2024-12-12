@@ -3,9 +3,6 @@ payload:
   - DOMAIN,alist.xiaoqinvar.cn
   - DOMAIN,certd.xiaoqinvar.cn
   
-  - DOMAIN,dbdiagram.chargebeestaticv2.com
-  - DOMAIN-KEYWORD,dbdiagram
-  
   - DOMAIN-SUFFIX,jsdelivr.com
   
   - DOMAIN-SUFFIX,vplay.life
