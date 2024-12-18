@@ -10,6 +10,7 @@ payload:
   - DOMAIN-KEYWORD,prettier
   - DOMAIN-KEYWORD,eslint
   
+  - PROCESS-NAME,Obsidian Helper
   - PROCESS-NAME,Notion Helper
   - PROCESS-NAME,verge-mihomo
   - PROCESS-NAME,Raycast
