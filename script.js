@@ -36,6 +36,7 @@ function main(config, profileName) {
         `DOMAIN,yacd.haishan.me,DIRECT`,
         `RULE-SET,dev-direct,DIRECT`,
         `RULE-SET,daily-foreign,${activeProfileName}`,
+        `RULE-SET,reject,REJECT`,
         `RULE-SET,icloud,DIRECT`,
         `RULE-SET,apple,DIRECT`,
         `GEOSITE,cloudflare-cn,DIRECT`,
