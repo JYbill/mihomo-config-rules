@@ -8,9 +8,9 @@ function main(config, profileName) {
     const firstGroupName = config["proxy-groups"][0]["name"];
     const activeProfileName = firstGroupName || '🚀 节点选择';
     
-     // 创建代理
+     // AI代理
     const proxyUSAList = config.proxies.filter((item) => item.name.match(/新加坡|日本|菲律宾/gi)).map((item) => item.name);
-    const aiProxyGroup = "🤖 AI专属"; // AI代理
+    const aiProxyGroup = "🤖 AI专属";
     config["proxy-groups"].unshift({
       name: aiProxyGroup,
       type: "url-test",
@@ -18,6 +18,18 @@ function main(config, profileName) {
       url: "https://www.anthropic.com/index/claude-2",
       interval: 86400,
     });
+  
+    // 美国代理
+    const USAList = config.proxies.filter((item) => item.name.match(/美国|USA/gi)).map((item) => item.name);
+    const USAGroupName = "🇺🇸 USA";
+    config["proxy-groups"].unshift({
+      name: USAGroupName,
+      type: "url-test",
+      proxies: USAList,
+      url: "https://labs.google/",
+      interval: 86400,
+    });
+  
     config["rules"].unshift(
         // 第一层：明确
         `DOMAIN,clash.razord.top,DIRECT`,
@@ -28,10 +40,13 @@ function main(config, profileName) {
         `RULE-SET,apple,DIRECT`,
         `GEOSITE,cloudflare-cn,DIRECT`,
         `GEOSITE,cloudflare,${aiProxyGroup}`,
-        `DOMAIN,auth.openai.com,${aiProxyGroup}`,
         `DOMAIN-KEYWORD,openai,${aiProxyGroup}`,
         `GEOSITE,openai,${aiProxyGroup}`,
         `DOMAIN-KEYWORD,gemini,${aiProxyGroup}`,
+        // google labs只允许美国IP使用
+        `DOMAIN-SUFFIX,labs.google,${USAGroupName}`,
+        `DOMAIN-SUFFIX,googleapis.com,${USAGroupName}`,
+        
         `GEOSITE,anthropic,${aiProxyGroup}`,
         `GEOSITE,github,${activeProfileName}`,
         `RULE-SET,google,${activeProfileName}`,
