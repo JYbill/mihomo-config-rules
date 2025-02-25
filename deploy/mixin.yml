@@ -30,6 +30,10 @@ dns:
   use-hosts: true
   respect-rules: false # dns根据rules代理，让代理服务器帮助走nameserver、fallback...
   enhanced-mode: fake-ip
+  # 在默认fake-ip-mode: blacklist下所有未在fake-ip-filter匹配的地址，全部返回fake-ip
+  # 在默认fake-ip-mode: whitelist下所有在fake-ip-filter匹配的地址，全部返回fake-ip
+  # fake-ip-filter:
+    # - 1.1.1.1
   default-nameserver: # 兜底nameserver域名情况
     - tls://1.12.12.12
     - tls://8.8.4.4
