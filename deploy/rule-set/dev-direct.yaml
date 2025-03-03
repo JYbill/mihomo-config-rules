@@ -2,16 +2,13 @@ payload:
   - DOMAIN-KEYWORD,umijs
   - DOMAIN,alist.xiaoqinvar.cn
   - DOMAIN,certd.xiaoqinvar.cn
-  
-  - DOMAIN-SUFFIX,jsdelivr.com
-  
-  - DOMAIN-SUFFIX,vplay.life
-  
+
   - PROCESS-NAME,Maps
   - PROCESS-NAME,com.apple.geod
+  - PROCESS-NAME,Tencent Lemon Lite
+  - PROCESS-NAME,网易有道翻译
   - DOMAIN-SUFFIX,ls.apple.com
   - DOMAIN-SUFFIX,push.apple.com
-  
   - DOMAIN-SUFFIX,cengot.com
-  
-  - PROCESS-NAME,网易有道翻译
+  - DOMAIN-SUFFIX,jsdelivr.com
+  - DOMAIN-SUFFIX,vplay.life
