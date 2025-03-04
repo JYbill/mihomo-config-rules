@@ -5,8 +5,8 @@ payload:
   - DOMAIN-SUFFIX,icoa.vip
   - DOMAIN-SUFFIX,colab.dev
   
+  - DOMAIN-KEYWORD,vercel
   - DOMAIN-KEYWORD,devtunnels
-
   - DOMAIN-KEYWORD,prettier
   - DOMAIN-KEYWORD,eslint
   
