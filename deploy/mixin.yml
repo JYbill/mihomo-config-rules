@@ -34,14 +34,17 @@ dns:
   # 在默认fake-ip-mode: whitelist下所有在fake-ip-filter匹配的地址，全部返回fake-ip
   # fake-ip-filter:
     # - 1.1.1.1
-  default-nameserver: # 兜底nameserver域名情况
+  default-nameserver: # 兜底nameserver、proxy-server-nameserver DNS是域名的情况如tls://域名（DOT、DOH）
     - tls://1.12.12.12
     - tls://8.8.4.4
     - tls://1.0.0.1
-  proxy-server-nameserver: # 由代理服务器查询dns时，查询代理服务器的dns解析（对于某些代理DNS会被ISP更改，最好用tls）
-    # 由于运营商会根据tls://域名，其中域名会走default-nameserver，DNS明文查询，这里运营商会拦截所有海外的DOT/DOH，所以这里最好用IP国内即可
-    # 推荐：后续的DOT/DOH最好用IP而不是域名，避免被ISP拦截，导致DOH/DOT被污染
-    - tls://dot.pub
+  proxy-server-nameserver: # 用于代理服务器域名进行DNS查询，而指定的DNS服务列表（某些代理DNS会被ISP更改，最好用tls）
+    # 由于运营商会根据tls://域名，其中域名会走default-nameserver，DNS明文查询，这里运营商会拦截所有海外的DOT/DOH（有概率）
+      # 1. 域名情况下，走default-nameserver，此时DNS明文查DOT/DOH的域名，有概率会被拦截域名
+      # 2. IP形式下，使用海外tls://8.8.4.4也有可能拦截IP
+    # 推荐：定义两个DOT，一个国内一个国外
+    - tls://8.8.4.4
+    - tls://1.12.12.12
   # 优先于nameserver/fallback规则
   nameserver-policy:
     'geosite:openai,google,anthropic,cloudflare': [1.0.0.1, 8.8.4.4] # 备用：tls://8.8.4.4, tls://1.0.0.1
