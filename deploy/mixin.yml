@@ -15,14 +15,21 @@
   # tls://77.88.8.8
 # 腾讯云
   # tls://dot.pub
+# 阿里云
+  # dns.alidns.com
+  # 223.5.5.5
+  # 223.6.6.6
 # GoogleDNS
   # tls://8.8.8.8（大概率封禁）
   # tls://8.8.8.8
+  # tls://dns.google
 # clouflare
   # tls://1.1.1.1 （大概率封禁）
   # tls://1.0.0.1（小概率封禁）
   # https://1.1.1.1/dns-query （大概率封禁）
   # https://1.0.0.1/dns-query（小概率封禁）
+  # tls://one.one.one.one(可用)
+  # tls://security.cloudflare-dns.com(可用)
 dns:
   use-system-hosts: false
   enable: true
@@ -43,8 +50,9 @@ dns:
       # 1. 域名情况下，走default-nameserver，此时DNS明文查DOT/DOH的域名，有概率会被拦截域名
       # 2. IP形式下，使用海外tls://8.8.4.4也有可能拦截IP
     # 推荐：定义两个DOT，一个国内一个国外
-    - tls://8.8.4.4
-    - tls://1.12.12.12
+    - tls://223.5.5.5
+    # - tls://one.one.one.one
+    - tls://security.cloudflare-dns.com
   # 优先于nameserver/fallback规则
   nameserver-policy:
     'geosite:openai,google,anthropic,cloudflare': [1.0.0.1, 8.8.4.4] # 备用：tls://8.8.4.4, tls://1.0.0.1
