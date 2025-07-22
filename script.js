@@ -31,38 +31,41 @@ function main(config, profileName) {
     });
   
     config["rules"].unshift(
-        // 第一层：明确
-        `DOMAIN,clash.razord.top,DIRECT`,
-        `DOMAIN,yacd.haishan.me,DIRECT`,
-        `RULE-SET,dev-direct,DIRECT`,
-        `RULE-SET,daily-foreign,${activeProfileName}`,
-        `RULE-SET,reject,REJECT`,
-        `RULE-SET,icloud,DIRECT`,
-        `RULE-SET,apple,DIRECT`,
-        `GEOSITE,cloudflare-cn,DIRECT`,
-        `GEOSITE,cloudflare,${aiProxyGroup}`,
-        `DOMAIN-KEYWORD,openai,${aiProxyGroup}`,
-        `GEOSITE,openai,${aiProxyGroup}`,
-        `DOMAIN-KEYWORD,gemini,${aiProxyGroup}`,
-        // google labs只允许美国IP使用
-        `DOMAIN-SUFFIX,labs.google,${USAGroupName}`,
-        `DOMAIN-SUFFIX,googleapis.com,${USAGroupName}`,
-        
-        `GEOSITE,anthropic,${aiProxyGroup}`,
-        `GEOSITE,github,${activeProfileName}`,
-        `RULE-SET,google,${activeProfileName}`,
-        // 第二层：模糊
-        `RULE-SET,direct,DIRECT`,
-        `RULE-SET,applications,DIRECT`,
-        `RULE-SET,private,DIRECT`,
-        `GEOSITE,CN,DIRECT`,
-        `RULE-SET,proxy,${activeProfileName}`, // 一定放在靠后的内容，包含openai、gemini，这些应该走专属AI代理
-        `GEOSITE,gfw,${activeProfileName}`,
-        `GEOSITE,greatfire,${activeProfileName}`,
-        // 第三层：无关紧要
-        `RULE-SET,lancidr,DIRECT,no-resolve`,
-        `RULE-SET,cncidr,DIRECT,no-resolve`,
-        `RULE-SET,telegramcidr,${activeProfileName},no-resolve`
-      );
-    return config;
+      // 第一层：明确
+      `DOMAIN,clash.razord.top,DIRECT`,
+      `DOMAIN,yacd.haishan.me,DIRECT`,
+      `RULE-SET,dev-direct,DIRECT`,
+      `RULE-SET,daily-foreign,${activeProfileName}`,
+      `RULE-SET,reject,REJECT`,
+      `RULE-SET,icloud,DIRECT`,
+      `RULE-SET,apple,DIRECT`,
+      `GEOSITE,cloudflare-cn,DIRECT`,
+      `GEOSITE,github,${activeProfileName}`,
+      `RULE-SET,google,${activeProfileName}`,
+      // AI
+      `GEOSITE,cloudflare,${aiProxyGroup}`,
+      `DOMAIN-KEYWORD,openai,${aiProxyGroup}`,
+      `GEOSITE,openai,${aiProxyGroup}`,
+      `DOMAIN-KEYWORD,gemini,${aiProxyGroup}`,
+      `GEOSITE,anthropic,${aiProxyGroup}`,
+      `PROCESS-NAME,Claude Helper,${aiProxyGroup}`,
+      // google labs只允许美国IP使用
+      `DOMAIN-SUFFIX,labs.google,${USAGroupName}`,
+      `DOMAIN-SUFFIX,googleapis.com,${USAGroupName}`,
+
+      // 第二层：模糊
+      `RULE-SET,direct,DIRECT`,
+      `RULE-SET,applications,DIRECT`,
+      `RULE-SET,private,DIRECT`,
+      `GEOSITE,CN,DIRECT`,
+      `RULE-SET,proxy,${activeProfileName}`, // 一定放在靠后的内容，包含openai、gemini，这些应该走专属AI代理
+      `GEOSITE,gfw,${activeProfileName}`,
+      `GEOSITE,greatfire,${activeProfileName}`,
+
+      // 第三层：无关紧要
+      `RULE-SET,lancidr,DIRECT,no-resolve`,
+      `RULE-SET,cncidr,DIRECT,no-resolve`,
+      `RULE-SET,telegramcidr,${activeProfileName},no-resolve`
+    );
+  return config;
   }
