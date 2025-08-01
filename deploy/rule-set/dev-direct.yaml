@@ -1,6 +1,8 @@
 payload:
   - DOMAIN-KEYWORD,umijs
-  - DOMAIN-KEYWORD,xiaoqinvar
+  - DOMAIN,alist.xiaoqinvar.cn
+  - DOMAIN,certd.xiaoqinvar.cn
+  - DOMAIN,www.xiaoqinvar.cn
 
   - PROCESS-NAME,Maps
   - PROCESS-NAME,com.apple.geod
