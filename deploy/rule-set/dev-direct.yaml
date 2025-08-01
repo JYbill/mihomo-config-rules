@@ -1,6 +1,5 @@
 payload:
   - DOMAIN-KEYWORD,umijs
-  - DOMAIN-SUFFIX,xiaoqinvar.cn
 
   - PROCESS-NAME,Maps
   - PROCESS-NAME,com.apple.geod
