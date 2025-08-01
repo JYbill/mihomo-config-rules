@@ -34,6 +34,13 @@ function main(config, profileName) {
       // 第一层：明确
       `DOMAIN,clash.razord.top,DIRECT`,
       `DOMAIN,yacd.haishan.me,DIRECT`,
+      // 私人站点
+      `DOMAIN-SUFFIX,jybill.top,${activeProfileName}`,
+      `DOMAIN,chat.xiaoqinvar.cn,${activeProfileName}`,
+      `DOMAIN,spy.xiaoqinvar.com,${activeProfileName}`,
+      `DOMAIN,uptime.xiaoqinvar.cn,${activeProfileName}`,
+      `DOMAIN-SUFFIX,xiaoqinvar.cn,DIRECT`,
+      // 其他指定的路由
       `RULE-SET,dev-direct,DIRECT`,
       `RULE-SET,daily-foreign,${activeProfileName}`,
       `RULE-SET,reject,REJECT`,
