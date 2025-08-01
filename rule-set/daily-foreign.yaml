@@ -1,5 +1,7 @@
 payload:
-  - DOMAIN-SUFFIX,xiaoqinvar.cn
+  - DOMAIN,chat.xiaoqinvar.cn
+  - DOMAIN,spy.xiaoqinvar.cn
+  - DOMAIN,uptime.xiaoqinvar.cn
   - DOMAIN-SUFFIX,jybill.top
   - DOMAIN-SUFFIX,icoa.cn
   - DOMAIN-SUFFIX,icoa.vip
