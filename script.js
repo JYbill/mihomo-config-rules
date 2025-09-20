@@ -40,6 +40,9 @@ function main(config, profileName) {
       `DOMAIN,spy.xiaoqinvar.com,${activeProfileName}`,
       `DOMAIN,uptime.xiaoqinvar.cn,${activeProfileName}`,
       `DOMAIN-SUFFIX,xiaoqinvar.cn,DIRECT`,
+      // google labs只允许美国IP使用
+      `DOMAIN-SUFFIX,labs.google,${USAGroupName}`,
+      `DOMAIN-SUFFIX,googleapis.com,${USAGroupName}`,
       // 其他指定的路由
       `RULE-SET,dev-direct,DIRECT`,
       `RULE-SET,daily-foreign,${activeProfileName}`,
@@ -56,9 +59,6 @@ function main(config, profileName) {
       `DOMAIN-KEYWORD,gemini,${aiProxyGroup}`,
       `GEOSITE,anthropic,${aiProxyGroup}`,
       `PROCESS-NAME,Claude Helper,${aiProxyGroup}`,
-      // google labs只允许美国IP使用
-      `DOMAIN-SUFFIX,labs.google,${USAGroupName}`,
-      `DOMAIN-SUFFIX,googleapis.com,${USAGroupName}`,
 
       // 第二层：模糊
       `RULE-SET,direct,DIRECT`,
