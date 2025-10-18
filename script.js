@@ -42,6 +42,7 @@ function main(config, profileName) {
       `DOMAIN-SUFFIX,xiaoqinvar.cn,DIRECT`,
       // google labs只允许美国IP使用
       `DOMAIN-SUFFIX,labs.google,${USAGroupName}`,
+      `DOMAIN-SUFFIX,labs.google.com,${USAGroupName}`,
       `DOMAIN-SUFFIX,googleapis.com,${USAGroupName}`,
       // 其他指定的路由
       `RULE-SET,dev-direct,DIRECT`,
@@ -54,11 +55,9 @@ function main(config, profileName) {
       `RULE-SET,google,${activeProfileName}`,
       // AI
       `GEOSITE,cloudflare,${aiProxyGroup}`,
-      `DOMAIN-KEYWORD,openai,${aiProxyGroup}`,
       `GEOSITE,openai,${aiProxyGroup}`,
       `DOMAIN-KEYWORD,gemini,${aiProxyGroup}`,
       `GEOSITE,anthropic,${aiProxyGroup}`,
-      `PROCESS-NAME,Claude Helper,${aiProxyGroup}`,
 
       // 第二层：模糊
       `RULE-SET,direct,DIRECT`,
@@ -74,5 +73,5 @@ function main(config, profileName) {
       `RULE-SET,cncidr,DIRECT,no-resolve`,
       `RULE-SET,telegramcidr,${activeProfileName},no-resolve`
     );
-  return config;
+    return config;
   }
