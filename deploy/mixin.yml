@@ -31,11 +31,13 @@
   # tls://one.one.one.one(可用)
   # tls://security.cloudflare-dns.com(可用)
 dns:
-  use-system-hosts: false
+  use-system-hosts: true
   enable: true
   ipv6: true
   use-hosts: true
-  respect-rules: false # dns根据rules代理，让代理服务器帮助走nameserver、fallback...
+  # dns根据rules代理，让代理服务器帮助走nameserver、fallback...
+  respect-rules: false
+  cache-algorithm: lru
   enhanced-mode: fake-ip
   # 在默认fake-ip-mode: blacklist下所有未在fake-ip-filter匹配的地址，全部返回fake-ip
   # 在默认fake-ip-mode: whitelist下所有在fake-ip-filter匹配的地址，全部返回fake-ip
@@ -55,23 +57,32 @@ dns:
     - tls://security.cloudflare-dns.com
   # 优先于nameserver/fallback规则
   nameserver-policy:
-    'geosite:openai,google,anthropic,cloudflare': [1.0.0.1, 8.8.4.4] # 备用：tls://8.8.4.4, tls://1.0.0.1
-    'geosite:cn': [119.29.29.29] # 对国内geosite
-    'rule-set:icloud,apple,direct,applications': [119.29.29.29]
+    'geosite:openai,google,anthropic,cloudflare': [8.8.4.4] # 备用：1.0.0.1, 8.8.4.4, tls://8.8.4.4, tls://1.0.0.1
+    'geosite:cn': [114.114.114.114] # 对国内geosite
+    'rule-set:icloud,apple,direct,applications': [114.114.114.114]
     'geosite:gfw,greatfire': [tls://1.0.0.1, tls://8.8.4.4] # 对geosite中的gfw、greatfire
     'rule-set:gfw': [tls://1.0.0.1, tls://8.8.4.4]
   # 默认DNS
   nameserver:
-    - 119.29.29.29
-  # 国外DNS
-  # fallback: 
-  #   - 8.8.8.8
-  #   - 1.1.1.1
-  # fallback-filter:
-  #   geoip: true
-  #   geoip-code: CN
-  #   ipcidr: # 当DNS响应为ipcidr包含的IP时，即意味着被该域名对应的IP已被污染，会再次走fallback DNS查询，得到真实IP
-  #     - ...
+    - 114.114.114.114
+    # - 119.29.29.29
+  # 直连dns查询
+  direct-nameserver:
+    - 114.114.114.114
+# ip嗅探域名
+sniffer:
+  enable: true
+  # 对 redir-host 类型识别的流量进行强制嗅探
+  force-dns-mapping: true
+  # 对所有未获取到域名的流量进行强制嗅探
+  parse-pure-ip: true
+  # 是否使用嗅探结果作为实际访问，默认为 true
+  override-destination: true
+  sniff:
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
 
 # GEO相关内容默认采用 https://github.com/Loyalsoldier开发的
   # https://github.com/Loyalsoldier/v2ray-rules-dat
