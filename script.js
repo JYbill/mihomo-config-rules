@@ -5,8 +5,27 @@
  * @return  {[type]}
  */
 function main(config, profileName) {
+    const proxies = config["proxies"];
     const firstGroupName = config["proxy-groups"][0]["name"];
     const activeProfileName = firstGroupName || '🚀 节点选择';
+
+    // 代理节点
+    proxies.unshift({
+      name: "🌐 内网148", 
+      type: "http",
+      server: "192.168.88.148", 
+      port: 7897,
+    });
+    // 内网HTTP隧道组
+    const localProxyList = config.proxies.filter((item) => item.name.match(/内网/gi)).map((item) => item.name);
+    const localGroup = "🌐 内网隧道";
+    config["proxy-groups"].unshift({
+      name: localGroup,
+      type: "url-test",
+      proxies: localProxyList,
+      url: "https://www.baidu.com",
+      interval: 86400,
+    });
     
      // AI代理
     const proxyUSAList = config.proxies.filter((item) => item.name.match(/新加坡|日本|菲律宾/gi)).map((item) => item.name);
