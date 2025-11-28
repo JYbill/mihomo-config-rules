@@ -6,18 +6,20 @@ mixed-port: 10801 # HTTP(S) 和 SOCKS 代理混合端口
 # Transparent proxy server port for Linux (TProxy TCP and TProxy UDP)
 # tproxy-port: 7893
 
-allow-lan: true # 允许局域网连接
 bind-address: "*" # 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表示所有地址
 authentication: # http,socks 入口的验证用户名，密码
   - "username:password"
 skip-auth-prefixes: # 设置跳过验证的 IP 段
   - 127.0.0.1/8
   - ::1/128
-lan-allowed-ips: # 允许连接的 IP 地址段，仅作用于 allow-lan 为 true, 默认值为 0.0.0.0/0 和::/0
+
+# 局域网连接配置
+allow-lan: true # 允许局域网连接
+lan-allowed-ips: # 允许局域网连接的IP网段，仅作用于 allow-lan 为 true, 默认值为 0.0.0.0/0 和::/0
   - 0.0.0.0/0
   - ::/0
 # 💡 clash服务的第一入口，优先级最高
-lan-disallowed-ips: # 禁止连接的 IP 地址段，黑名单优先级高于白名单，默认值为空
+lan-disallowed-ips: # 禁止局域网连接的IP网段，黑名单优先级高于白名单，默认值允许所有
   - 192.168.0.3/32
 
 #  find-process-mode has 3 values:always, strict, off
@@ -46,6 +48,7 @@ log-level: debug # 日志等级 silent/error/warning/info/debug
 
 ipv6: true # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS 请求 AAAA 记录
 
+# 外部扩展API配置
 tls:
   certificate: string # 证书 PEM 格式，或者 证书的路径
   private-key: string # 证书对应的私钥 PEM 格式，或者私钥路径
@@ -189,23 +192,17 @@ sniffer:
     #  ports: [ 443 ]
     TLS:
     #  ports: [443, 8443]
-
     # 默认嗅探 80
     HTTP: # 需要嗅探的端口
       ports: [80, 8080-8880]
       # 可覆盖 sniffer.override-destination
       override-destination: true
-  force-domain:
-    - +.v2ex.com
+    # 强制对此域名进行嗅探
+    force-domain:
+      - +.v2ex.com
   ## 对嗅探结果进行跳过
   # skip-domain:
   #   - Mijia Cloud
-  # 需要嗅探协议
-  # 已废弃，若 sniffer.sniff 配置则此项无效
-  sniffing:
-    - tls
-    - http
-  # 强制对此域名进行嗅探
 
   # 仅对白名单中的端口进行嗅探，默认为 443，80
   # 已废弃，若 sniffer.sniff 配置则此项无效
@@ -372,16 +369,24 @@ proxies: # socks5
     # ipv4-prefer：优先使用 IPv4 对于 TCP 会进行双栈解析，并发链接但是优先使用 IPv4 链接，
     # UDP 则为双栈解析，获取结果中的第一个 IPv4
     # ipv6-prefer 同 ipv4-prefer
+
+    # sing-mux 出站代理多路复用配置，⚠️ 需要代理协议为TCP协议，允许在单个TCP连接上创建多个虚拟流（streams），从而提高连接效率和性能
+    # 💡 适用场景：快速且数量多的连接。而一旦时间长丢包率高，反而不如单个连接效率高
     # 现有协议都支持此参数，TCP 效果仅在开启 tcp-concurrent 生效
     smux:
       enabled: false
       protocol: smux # smux/yamux/h2mux
+      # 最大、最小连接数的配置
       # max-connections: 4 # Maximum connections. Conflict with max-streams.
       # min-streams: 4 # Minimum multiplexed streams in a connection before opening a new connection. Conflict with max-streams.
       # max-streams: 0 # Maximum multiplexed streams in a connection before opening a new connection. Conflict with max-connections and min-streams.
-      # padding: false # Enable padding. Requires sing-box server version 1.3-beta9 or later.
-      # statistic: false # 控制是否将底层连接显示在面板中，方便打断底层连接
+      # padding: false # 在多路复用中允许添加额外的虚拟流数据包
+      # statistic: false # 控制是否将底层连接显示在面板中
       # only-tcp: false # 如果设置为 true, smux 的设置将不会对 udp 生效，udp 连接会直接走底层协议
+      # smux.brutal-opts：TCP Brutal 设置
+        # enabled: true # 启用 TCP Brutal 拥塞控制算法
+        # up: 1024 # 上传最大带宽，默认单位Mbps
+        # down: 1024 # 下载最大带宽，默认单位Mbps
 
   - name: "ss2"
     type: ss
@@ -879,6 +884,7 @@ proxy-groups:
   - name: en1
     type: select
     interface-name: en1
+    # 节点发起连接时附加的路由标记，这个标记可以被操作系统的路由表（如 Linux 的 ip rule/ip route）识别和利用，实现更灵活的流量分流和策略路由。常见用法是在多出口、多网卡或特殊路由需求场景下，结合系统级路由规则，实现不同流量走不同出口或网卡。
     routing-mark: 6667
     proxies:
       - DIRECT
@@ -999,7 +1005,7 @@ sub-rules:
     - IP-CIDR,8.8.8.8/32,ss1
     - DOMAIN,dns.alidns.com,REJECT
 
-# 流量入站
+# 暴露入站端口配置
 listeners:
   - name: socks5-in-1
     type: socks
