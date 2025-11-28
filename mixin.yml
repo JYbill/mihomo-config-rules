@@ -1,5 +1,14 @@
 # 完整配置参考：https://github.com/MetaCubeX/mihomo/blob/Meta/docs/config.yaml
 
+tun:
+  enable: true
+  stack: mixed
+  auto-route: true
+  auto-detect-interface: true
+  route-exclude-address:
+    - 192.168.1.0/24
+    - 192.168.10.0/24
+
 # DNS封禁原理（已知大概率被封的DOT/DOH，需要根据本地ISP自行测试）
 # 🤔 强烈推荐不要写域名形式的DOT/DOH，有些海外域名对应的多个IP都已被封禁，只有一个IP可用，可能因为超出DNS查询时间以失败结束（还没查到可以访问的DNS）
 
