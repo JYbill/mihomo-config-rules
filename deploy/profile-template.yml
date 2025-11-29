@@ -88,7 +88,8 @@ global-client-fingerprint: chrome
 #  TCP keep alive interval
 keep-alive-interval: 15
 
-# routing-mark:6666 # 配置 fwmark 仅用于 Linux
+# （仅用于Linux）配置 fwmark。可以额外在路由表上配置分流
+# routing-mark:6666 
 experimental:
   # Disable quic-go GSO support. This may result in reduced performance on Linux.
   # This is not recommended for most users.
@@ -117,22 +118,33 @@ profile: # 存储 select 选择记录
 tun:
   enable: false
   stack: system # gvisor/mixed
+  # ⚠️ 在 MacOS/Windows 无法自动劫持发往局域网的 dns 请求
+  # ⚠️ 在 Android 如开启 私人dns 则无法自动劫持 dns 请求
   dns-hijack:
     - 0.0.0.0:53 # 需要劫持的 DNS
   # auto-detect-interface: true # 自动识别出口网卡
-  # auto-route: true # 自动配置本机流向外网的路由表
-  # mtu: 9000 # 最大传输单元
+  # mtu: 1500 # 最大传输单元
   # gso: false # 启用通用分段卸载，仅支持 Linux
   # gso-max-size: 65536 # 通用分段卸载包的最大大小
-  auto-redirect: false # 作为网关自动配置进入的流量流向外网的路由表。仅支持 Linux iptables
-  # strict-route: true # 将所有连接路由到 tun 来防止泄漏，但你的设备将无法其他设备被访问
+  # 作为网关时需要开启，自动配置进入的流量流向mihomo clash。仅支持 Linux iptables。⚠️ 不支持windows、macos
+  # 本地流量为OUTPUT流量（mihono clash可以开启tun.auto-route完成透明代理）
+  # 网关流量为FORWARD流量（mihono clash需要开启tun.auto-redirect完成网关下的透明代理）
+  auto-route: true # 配置路由表（支持macos、linux即iproute2、windows）
+  # ⚠️ auto-redirect会保持auto-route一致的路由表，所以只需要排除auto-route ip网段即可
+  # ⚠️ android仅转发ipv4流量
+  auto-redirect: false
+  # 将所有连接路由到 tun 来防止泄漏，但你的设备将无法其他设备被访问
+  # 🤔 原理：auto-route是设置的iproute2，开启strict-route还会在iptables上设置，可以解决绝大部分流量逃逸问题
+  strict-route: false
   route-address-set: # 将指定规则集中的目标 IP CIDR 规则添加到防火墙, 不匹配的流量将绕过路由, 仅支持 Linux，且需要 nftables，`auto-route` 和 `auto-redirect` 已启用。
     - ruleset-1
     - ruleset-2
   route-exclude-address-set: # 将指定规则集中的目标 IP CIDR 规则添加到防火墙, 匹配的流量将绕过路由, 仅支持 Linux，且需要 nftables，`auto-route` 和 `auto-redirect` 已启用。
     - ruleset-3
     - ruleset-4
-  # ⚠️ lan-disallowed-ips优先级最高，只有经过它才能处理route-address的IP
+  # 默认排除的tun ip网段：192.168.0.0/16（局域网段）。网段内的都会走系统路由
+  route-exclude-address:
+    - 192.168.0.0/16
   route-address: # 启用 auto-route 时使用自定义路由而不是默认路由（目的：捕获网卡中的所有流量）
     - 0.0.0.0/1
     - 128.0.0.0/1
@@ -238,9 +250,11 @@ dns:
     - system # append DNS server from system configuration. If not found, it would print an error log and skip.
   enhanced-mode: fake-ip # or redir-host
 
-  fake-ip-range: 198.18.0.1/16 # fake-ip 池设置
+  # fake-ip池默认设置
+  fake-ip-range: 198.18.0.1/16
 
-  # use-hosts: true # 查询 hosts
+  # 查询 hosts
+  # use-hosts: true
 
   # 配置后面的nameserver、fallback和nameserver-policy向dns服务器的连接过程是否遵守遵守rules规则
   # 如果为false（默认值）则这三部分的dns服务器在未特别指定的情况下会直连
@@ -310,6 +324,24 @@ dns:
     ## 且 behavior 必须为 domain/classical，当为 classical 时仅会生效域名类规则
     # "rule-set:global,dns": 8.8.8.8
 
+    # proxies.smux
+    # sing-mux 出站代理多路复用配置，⚠️ 需要代理协议为TCP协议，允许在单个TCP连接上创建多个虚拟流（streams），从而提高连接效率和性能
+    # 💡 适用场景：快速且数量多的连接。而一旦时间长丢包率高，反而不如单个连接效率高
+    # 现有协议都支持此参数，TCP 效果仅在开启 tcp-concurrent 生效
+    # smux:
+      # enabled: false
+      # protocol: smux # smux/yamux/h2mux
+      # 最大、最小连接数的配置
+      # max-connections: 4 # Maximum connections. Conflict with max-streams.
+      # min-streams: 4 # Minimum multiplexed streams in a connection before opening a new connection. Conflict with max-streams.
+      # max-streams: 0 # Maximum multiplexed streams in a connection before opening a new connection. Conflict with max-connections and min-streams.
+      # padding: false # 在多路复用中允许添加额外的虚拟流数据包
+      # statistic: false # 控制是否将底层连接显示在面板中
+      # only-tcp: false # 如果设置为 true, smux 的设置将不会对 udp 生效，udp 连接会直接走底层协议
+      # smux.brutal-opts：TCP Brutal 设置
+        # enabled: true # 启用 TCP Brutal 拥塞控制算法
+        # up: 1024 # 上传最大带宽，默认单位Mbps
+        # down: 1024 # 下载最大带宽，默认单位Mbps
 proxies: # socks5
   - name: "socks"
     type: socks5
@@ -369,24 +401,6 @@ proxies: # socks5
     # ipv4-prefer：优先使用 IPv4 对于 TCP 会进行双栈解析，并发链接但是优先使用 IPv4 链接，
     # UDP 则为双栈解析，获取结果中的第一个 IPv4
     # ipv6-prefer 同 ipv4-prefer
-
-    # sing-mux 出站代理多路复用配置，⚠️ 需要代理协议为TCP协议，允许在单个TCP连接上创建多个虚拟流（streams），从而提高连接效率和性能
-    # 💡 适用场景：快速且数量多的连接。而一旦时间长丢包率高，反而不如单个连接效率高
-    # 现有协议都支持此参数，TCP 效果仅在开启 tcp-concurrent 生效
-    smux:
-      enabled: false
-      protocol: smux # smux/yamux/h2mux
-      # 最大、最小连接数的配置
-      # max-connections: 4 # Maximum connections. Conflict with max-streams.
-      # min-streams: 4 # Minimum multiplexed streams in a connection before opening a new connection. Conflict with max-streams.
-      # max-streams: 0 # Maximum multiplexed streams in a connection before opening a new connection. Conflict with max-connections and min-streams.
-      # padding: false # 在多路复用中允许添加额外的虚拟流数据包
-      # statistic: false # 控制是否将底层连接显示在面板中
-      # only-tcp: false # 如果设置为 true, smux 的设置将不会对 udp 生效，udp 连接会直接走底层协议
-      # smux.brutal-opts：TCP Brutal 设置
-        # enabled: true # 启用 TCP Brutal 拥塞控制算法
-        # up: 1024 # 上传最大带宽，默认单位Mbps
-        # down: 1024 # 下载最大带宽，默认单位Mbps
 
   - name: "ss2"
     type: ss
@@ -1098,6 +1112,7 @@ listeners:
     network: [tcp, udp]
     target: target.com
 
+  # 开启tun模式，等价于这里写的入站监听
   - name: tun-in-1
     type: tun
     # rule: sub-rule-name1 # 默认使用 rules，如果未找到 sub-rule 则直接使用 rules
@@ -1107,7 +1122,7 @@ listeners:
     - 0.0.0.0:53 # 需要劫持的 DNS
     # auto-detect-interface: false # 自动识别出口网卡
     # auto-route: false # 配置路由表
-    # mtu: 9000 # 最大传输单元
+    # mtu: 1500 # 最大传输单元
     inet4-address: # 必须手动设置 ipv4 地址段
     - 198.19.0.1/30
     inet6-address: # 必须手动设置 ipv6 地址段
