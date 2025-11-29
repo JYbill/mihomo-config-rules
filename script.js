@@ -9,14 +9,24 @@ function main(config, profileName) {
     const firstGroupName = config["proxy-groups"][0]["name"];
     const activeProfileName = firstGroupName || '🚀 节点选择';
 
-    // 代理节点
+    // 内网开发专用代理节点
     proxies.unshift({
-      name: "🌐 内网148", 
-      type: "http",
-      server: "192.168.88.148", 
-      port: 7897,
-    });
-    // 内网HTTP隧道组
+      name: "🌐 内网代理链223", 
+      type: "ssh",
+      server: "",
+      port: 22,
+      username: "",
+      password: "",
+      "dialer-proxy": "🌐 穿透内网221",
+    }, {
+      name: "🌐 穿透内网221", 
+      type: "ssh",
+      server: "", 
+      port: 22,
+      username: "",
+      password: ""
+  });
+    // 内网HTTP隧道组，用于测试是否通畅
     const localProxyList = config.proxies.filter((item) => item.name.match(/内网/gi)).map((item) => item.name);
     const localGroup = "🌐 内网隧道";
     config["proxy-groups"].unshift({
@@ -50,15 +60,11 @@ function main(config, profileName) {
     });
   
     config["rules"].unshift(
+      // 第零层：局域网开发
+      `IP-CIDR,192.168.88.0/24,🌐 内网代理链223,no-resolve`,
       // 第一层：明确
       `DOMAIN,clash.razord.top,DIRECT`,
       `DOMAIN,yacd.haishan.me,DIRECT`,
-      // 私人站点
-      `DOMAIN-SUFFIX,jybill.top,${activeProfileName}`,
-      `DOMAIN,chat.xiaoqinvar.cn,${activeProfileName}`,
-      `DOMAIN,spy.xiaoqinvar.com,${activeProfileName}`,
-      `DOMAIN,uptime.xiaoqinvar.cn,${activeProfileName}`,
-      `DOMAIN-SUFFIX,xiaoqinvar.cn,DIRECT`,
       // google labs只允许美国IP使用
       `DOMAIN-SUFFIX,labs.google,${USAGroupName}`,
       `DOMAIN-SUFFIX,labs.google.com,${USAGroupName}`,
