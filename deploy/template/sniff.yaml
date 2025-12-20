@@ -1,0 +1,34 @@
+# 嗅探域名 可选配置
+sniffer:
+  enable: false
+  ## 对 redir-host 类型识别的流量进行强制嗅探
+  ## 如：Tun、Redir 和 TProxy 并 DNS 为 redir-host 皆属于
+  # force-dns-mapping: false
+  ## 对所有未获取到域名的流量进行强制嗅探
+  # parse-pure-ip: false
+  # 是否使用嗅探结果作为实际访问，默认 true
+  # 全局配置，优先级低于 sniffer.sniff 实际配置
+  override-destination: false
+  sniff: # TLS 和 QUIC 默认如果不配置 ports 默认嗅探 443
+    QUIC:
+    #  ports: [ 443 ]
+    TLS:
+    #  ports: [443, 8443]
+    # 默认嗅探 80
+    HTTP: # 需要嗅探的端口
+      ports: [80, 8080-8880]
+      # 可覆盖 sniffer.override-destination
+      override-destination: true
+    # 强制对此域名进行嗅探
+    force-domain:
+      - +.v2ex.com
+  ## 对嗅探结果进行跳过
+  # skip-domain:
+  #   - Mijia Cloud
+
+  # 仅对白名单中的端口进行嗅探，默认为 443，80
+  # 已废弃，若 sniffer.sniff 配置则此项无效
+  port-whitelist:
+    - "80"
+    - "443"
+    # - 8000-9999
