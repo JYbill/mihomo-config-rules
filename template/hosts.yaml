@@ -1,0 +1,8 @@
+# 类似于 /etc/hosts, 仅支持配置单个 IP
+hosts:
+# '*.mihomo.dev': 127.0.0.1
+# '.dev': 127.0.0.1
+# 'alpha.mihomo.dev': '::1'
+# test.com: [1.1.1.1, 2.2.2.2]
+# home.lan: lan # lan 为特别字段，将加入本地所有网卡的地址
+# baidu.com: google.com # 只允许配置一个别名

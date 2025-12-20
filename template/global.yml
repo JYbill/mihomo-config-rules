@@ -1,0 +1,99 @@
+# port: 7890 # HTTP(S) 代理服务器端口
+# socks-port: 7891 # SOCKS5 代理端口
+mixed-port: 10801 # HTTP(S) 和 SOCKS 代理混合端口
+# redir-port: 7892 # 透明代理端口，用于 Linux 和 MacOS
+
+# Transparent proxy server port for Linux (TProxy TCP and TProxy UDP)
+# tproxy-port: 7893
+
+bind-address: "*" # 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表示所有地址
+authentication: # http,socks 入口的验证用户名，密码
+  - "username:password"
+skip-auth-prefixes: # 设置跳过验证的 IP 段
+  - 127.0.0.1/8
+  - ::1/128
+
+# 局域网连接配置
+allow-lan: true # 允许局域网连接
+lan-allowed-ips: # 允许局域网连接的IP网段，仅作用于 allow-lan 为 true, 默认值为 0.0.0.0/0 和::/0
+  - 0.0.0.0/0
+  - ::/0
+# 💡 clash服务的第一入口，优先级最高
+lan-disallowed-ips: # 禁止局域网连接的IP网段，黑名单优先级高于白名单，默认值允许所有
+  - 192.168.0.3/32
+
+#  find-process-mode has 3 values:always, strict, off
+#  - always, 开启，强制匹配所有进程
+#  - strict, 默认，由 mihomo 判断是否开启
+#  - off, 不匹配进程，推荐在路由器上使用此模式
+find-process-mode: strict
+
+mode: rule
+
+log-level: debug # 日志等级 silent/error/warning/info/debug
+
+ipv6: true # 开启 IPv6 总开关，关闭阻断所有 IPv6 链接和屏蔽 DNS 请求 AAAA 记录
+
+# 外部扩展API配置
+tls:
+  certificate: string # 证书 PEM 格式，或者 证书的路径
+  private-key: string # 证书对应的私钥 PEM 格式，或者私钥路径
+  custom-certifactes:
+    - |
+      -----BEGIN CERTIFICATE-----
+      format/pem...
+      -----END CERTIFICATE-----
+
+external-controller: 0.0.0.0:9093 # RESTful API 监听地址
+external-controller-tls: 0.0.0.0:9443 # RESTful API HTTPS 监听地址，需要配置 tls 部分配置文件
+# secret: "123456" # `Authorization:Bearer ${secret}`
+
+# RESTful API Unix socket 监听地址（ windows版本大于17063也可以使用，即大于等于1803/RS4版本即可使用 ）
+# ！！！注意： 从Unix socket访问api接口不会验证secret， 如果开启请自行保证安全问题 ！！！
+# 测试方法： curl -v --unix-socket "mihomo.sock" http://localhost/
+external-controller-unix: mihomo.sock
+
+# tcp-concurrent: true # TCP 并发连接所有 IP, 将使用最快握手的 TCP
+
+# 配置 WEB UI 目录，使用 http://{{external-controller}}/ui 访问
+external-ui: /path/to/ui/folder/
+external-ui-name: xd
+external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
+
+# 在RESTful API端口上开启DOH服务器
+# ！！！该URL不会验证secret， 如果开启请自行保证安全问题 ！！！
+external-doh-server: /dns-query
+
+# interface-name: en0 # 设置出口网卡
+
+# 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint
+# 可选： "chrome","firefox","safari","ios","random","none" options.
+# Utls is currently support TLS transport in TCP/grpc/WS/HTTP for VLESS/Vmess and trojan.
+global-client-fingerprint: chrome
+
+#  TCP keep alive interval
+keep-alive-interval: 15
+
+# （仅用于Linux）配置 fwmark。可以额外在路由表上配置分流
+# routing-mark:6666 
+experimental:
+  # Disable quic-go GSO support. This may result in reduced performance on Linux.
+  # This is not recommended for most users.
+  # Only users encountering issues with quic-go's internal implementation should enable this,
+  # and they should disable it as soon as the issue is resolved.
+  # This field will be removed when quic-go fixes all their issues in GSO.
+  # This equivalent to the environment variable QUIC_GO_DISABLE_GSO=1.
+  #quic-go-disable-gso: true
+
+profile: # 存储 select 选择记录
+  store-selected: false
+
+  # 持久化 fake-ip
+  store-fake-ip: true
+
+#ebpf 配置
+ebpf:
+  auto-redir: # redirect 模式，仅支持 TCP
+    - eth0
+  redirect-to-tun: # UDP+TCP 使用该功能请勿启用 auto-route
+    - eth0
