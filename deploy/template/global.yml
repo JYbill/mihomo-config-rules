@@ -13,6 +13,9 @@ skip-auth-prefixes: # 设置跳过验证的 IP 段
   - 127.0.0.1/8
   - ::1/128
 
+# 开启统一延迟时，会计算 RTT，以消除连接握手等带来的不同类型节点的延迟差异
+unified-delay: true
+
 # 局域网连接配置
 allow-lan: true # 允许局域网连接
 lan-allowed-ips: # 允许局域网连接的IP网段，仅作用于 allow-lan 为 true, 默认值为 0.0.0.0/0 和::/0
