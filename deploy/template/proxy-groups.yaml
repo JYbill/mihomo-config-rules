@@ -1,0 +1,123 @@
+# 内置代理组 GLOBAL：代表所有流量的出口。它是proxy、proxy-groups的集合。它是为全局模式专属设置的
+
+proxy-groups:
+  # 代理链，目前 relay 可以支持 udp 的只有 vmess/vless/trojan/ss/ssr/tuic
+  # wireguard 目前不支持在 relay 中使用，请使用 proxy 中的 dialer-proxy 配置项
+  # Traffic: mihomo <-> http <-> vmess <-> ss1 <-> ss2 <-> Internet
+  - name: "relay"
+    type: relay
+    proxies:
+      - http
+      - vmess
+      - ss1
+      - ss2
+
+  # url-test 将按照 url 测试结果使用延迟最低节点
+  - name: "auto"
+    type: url-test
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+    # tolerance: 150
+    # lazy: true
+    # expected-status: 204 # 当健康检查返回状态码与期望值不符时，认为节点不可用
+    url: "https://cp.cloudflare.com/generate_204"
+    interval: 300
+
+  # fallback 将按照 url 测试结果按照节点顺序选择
+  - name: "fallback-auto"
+    type: fallback
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+    url: "https://cp.cloudflare.com/generate_204"
+    interval: 300
+
+  # load-balance 将按照算法随机选择节点
+  - name: "load-balance"
+    type: load-balance
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+    url: "https://cp.cloudflare.com/generate_204"
+    interval: 300
+  # strategy: consistent-hashing # 可选 round-robin 和 sticky-sessions
+
+  # select 用户自行选择节点
+  - name: Proxy
+    type: select
+    # disable-udp: true
+    proxies:
+      - ss1
+      - ss2
+      - vmess1
+      - auto
+
+  # 配置指定 interface-name 和 fwmark 的 DIRECT
+  - name: en1
+    type: select
+    interface-name: en1
+    # 节点发起连接时附加的路由标记，这个标记可以被操作系统的路由表（如 Linux 的 ip rule/ip route）识别和利用，实现更灵活的流量分流和策略路由。常见用法是在多出口、多网卡或特殊路由需求场景下，结合系统级路由规则，实现不同流量走不同出口或网卡。
+    routing-mark: 6667
+    proxies:
+      - DIRECT
+
+  - name: UseProvider
+    type: select
+    filter: "HK|TW" # 正则表达式，过滤 provider1 中节点名包含 HK 或 TW
+    use:
+      - provider1
+    proxies:
+      - Proxy
+      - DIRECT
+
+
+
+
+
+
+
+# 代理集合：转为proxy-groups.uses属性准备的，用于将多个代理集合的节点导入到一个代理组内
+# Mihomo 格式的节点或支持 *ray 的分享格式
+proxy-providers:
+  provider1:
+    type: http # http 的 path 可空置，默认储存路径为 homedir 的 proxies 文件夹，文件名为 url 的 md5
+    url: "url"
+    interval: 3600
+    path: ./provider1.yaml # 默认只允许存储在 mihomo 的 Home Dir，如果想存储到任意位置，添加环境变量 SKIP_SAFE_PATH_CHECK=1
+    proxy: DIRECT
+    header:
+      User-Agent:
+      - "Clash/v1.18.0"
+      - "mihomo/1.18.3"
+      # Accept:
+      # - 'application/vnd.github.v3.raw'
+      # Authorization:
+      # - 'token 1231231'
+    health-check:
+      enable: true
+      interval: 600
+      # lazy: true
+      url: https://cp.cloudflare.com/generate_204
+      # expected-status: 204 # 当健康检查返回状态码与期望值不符时，认为节点不可用
+    override: # 覆写节点加载时的一些配置项
+      skip-cert-verify: true
+      udp: true
+      # down: "50 Mbps"
+      # up: "10 Mbps"
+      # dialer-proxy: proxy
+      # interface-name: tailscale0
+      # routing-mark: 233
+      # ip-version: ipv4-prefer
+      # additional-prefix: "[provider1]"
+      # additional-suffix: "test"
+  test:
+    type: file
+    path: /test.yaml
+    health-check:
+      enable: true
+      interval: 36000
+      url: https://cp.cloudflare.com/generate_204
