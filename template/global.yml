@@ -3,11 +3,13 @@
 mixed-port: 10801 # HTTP(S) 和 SOCKS 代理混合端口
 # redir-port: 7892 # 透明代理端口，用于 Linux 和 MacOS（需要配合auto-redirect:true使用，作为旁路网关）
 
-# Transparent proxy server port for Linux (TProxy TCP and TProxy UDP)
+# tproxy透明代理协议端口，仅限linux(Android)适用
 # tproxy-port: 7893
 
 bind-address: "*" # 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表示所有地址
-authentication: # http,socks 入口的验证用户名，密码
+
+# http,socks 入口的验证用户名，密码
+authentication:
   - "username:password"
 skip-auth-prefixes: # 设置跳过验证的 IP 段
   - 127.0.0.1/8
@@ -58,8 +60,9 @@ external-controller-unix: mihomo.sock
 
 # tcp-concurrent: true # TCP 并发连接所有 IP, 将使用最快握手的 TCP
 
-# 配置 WEB UI 目录，使用 http://{{external-controller}}/ui 访问
-external-ui: /path/to/ui/folder/
+# 配置面板目录，使用http://{{external-controller}}/ui访问，需要配置"external-ui"才会触发"external-ui-url"的下载
+external-ui: /root/.config/mihomo/ui
+# 访问ui面板的prefixPath，例如："/ui/xd"
 external-ui-name: xd
 external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
 
