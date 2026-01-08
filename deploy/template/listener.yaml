@@ -1,4 +1,5 @@
 # 暴露入站端口配置
+# 应用场景：作为服务器代理服务使用
 listeners:
   - name: socks5-in-1
     type: socks
