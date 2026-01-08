@@ -69,7 +69,8 @@ external-doh-server: /dns-query
 
 # interface-name: en0 # 设置出口网卡
 
-# 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint
+# 全局TLS指纹，优先低于proxy内的client-fingerprint。
+# 作用：clash客户端 - 代理节点 - 目标服务器进行TLS握手时，clash模拟不同的浏览器的加密套件扩展...等浏览器特征，从而让目标服务器认为在直接与客户端通信
 # 可选： "chrome","firefox","safari","ios","random","none" options.
 # Utls is currently support TLS transport in TCP/grpc/WS/HTTP for VLESS/Vmess and trojan.
 global-client-fingerprint: chrome
@@ -77,7 +78,7 @@ global-client-fingerprint: chrome
 #  TCP keep alive interval
 keep-alive-interval: 15
 
-# （仅用于Linux）配置 fwmark。可以额外在路由表上配置分流
+# （仅用于Linux）配置 fwmark。可以额外在路由表(iptables)上配置clash出站后的自定义分流方式
 # routing-mark:6666 
 experimental:
   # Disable quic-go GSO support. This may result in reduced performance on Linux.
