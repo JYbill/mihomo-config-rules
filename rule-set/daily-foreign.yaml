@@ -2,6 +2,7 @@ payload:
   - DOMAIN-SUFFIX,icoa.cn
   - DOMAIN-SUFFIX,icoa.vip
   - DOMAIN-SUFFIX,colab.dev
+  - DOMAIN-SUFFIX,app.warp.dev
   
   - DOMAIN-KEYWORD,vercel
   - DOMAIN-KEYWORD,devtunnels
