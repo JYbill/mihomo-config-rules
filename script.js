@@ -34,14 +34,8 @@ function main(config, profileName) {
     `DOMAIN-KEYWORD,openai,${aiProxyGroup}`,
     `GEOSITE,openai,${aiProxyGroup}`,
 
+    `RULE-SET,google,${aiProxyGroup}`,
     `GEOSITE,google-deepmind,${aiProxyGroup}`,
-    `DOMAIN-KEYWORD,gemini,${aiProxyGroup}`,
-    `DOMAIN-SUFFIX,antigravity.google,${aiProxyGroup}`,
-    `DOMAIN-SUFFIX,aistudio.google.com,${aiProxyGroup}`,
-    `DOMAIN-SUFFIX,clients6.google.com,${aiProxyGroup}`,
-    `DOMAIN-SUFFIX,one.google.com,${aiProxyGroup}`,
-    // 不是明确的Google
-    `RULE-SET,google,${activeProfileName}`,
 
     `GEOSITE,anthropic,${aiProxyGroup}`,
     `PROCESS-NAME,Claude Helper,${aiProxyGroup}`,
