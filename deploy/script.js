@@ -40,9 +40,6 @@ function main(config, profileName) {
     `GEOSITE,anthropic,${aiProxyGroup}`,
     `PROCESS-NAME,Claude Helper,${aiProxyGroup}`,
     `DOMAIN-SUFFIX,jetbrains.ai,${aiProxyGroup}`,
-    // google labs只允许美国IP使用
-    `DOMAIN-SUFFIX,labs.google,${usaGroupName}`,
-    `DOMAIN-SUFFIX,googleapis.com,${usaGroupName}`,
 
     // 第二层：模糊
     `RULE-SET,direct,DIRECT`,
