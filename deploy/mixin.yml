@@ -66,7 +66,7 @@ dns:
     - tls://security.cloudflare-dns.com
   # 优先于nameserver/fallback规则
   nameserver-policy:
-    'geosite:openai,google,anthropic,cloudflare': [8.8.4.4] # 备用：1.0.0.1, 8.8.4.4, tls://8.8.4.4, tls://1.0.0.1
+    'geosite:openai,google,anthropic,cloudflare': [114.114.114.114] # 备用：1.0.0.1, 8.8.4.4, tls://8.8.4.4, tls://1.0.0.1
     'geosite:cn': [114.114.114.114] # 对国内geosite
     'rule-set:icloud,apple,direct,applications': [114.114.114.114]
     'geosite:gfw,greatfire': [tls://1.0.0.1, tls://8.8.4.4] # 对geosite中的gfw、greatfire
