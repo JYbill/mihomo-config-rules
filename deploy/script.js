@@ -40,16 +40,19 @@ function main(config, profileName) {
     `GEOSITE,github,${activeProfileName}`,
     `DOMAIN-SUFFIX,anyrouter.top,${activeProfileName}`,
     // AI
-    `GEOSITE,cloudflare,${aiProxyGroup}`,
-    `DOMAIN-KEYWORD,openai,${aiProxyGroup}`,
-    `GEOSITE,openai,${aiProxyGroup}`,
+    `GEOSITE,cloudflare,${aiGroup}`,
 
-    `RULE-SET,google,${aiProxyGroup}`,
-    `GEOSITE,google-deepmind,${aiProxyGroup}`,
+    `GEOSITE,openai,${aiGroup}`,
 
-    `GEOSITE,anthropic,${aiProxyGroup}`,
-    `PROCESS-NAME,Claude Helper,${aiProxyGroup}`,
-    `DOMAIN-SUFFIX,jetbrains.ai,${aiProxyGroup}`,
+    `RULE-SET,google,${aiGroup}`,
+    `GEOSITE,google-deepmind,${aiGroup}`,
+
+    `DOMAIN-KEYWORD,anthropic,${homeNetGroup}`,
+    `DOMAIN-KEYWORD,claude,${homeNetGroup}`,
+    `GEOSITE,anthropic,${homeNetGroup}`,
+    `PROCESS-NAME,Claude Helper,${homeNetGroup}`,
+
+    `DOMAIN-SUFFIX,jetbrains.ai,${aiGroup}`,
 
     // 第二层：模糊
     `RULE-SET,direct,DIRECT`,
