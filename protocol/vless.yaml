@@ -1,0 +1,5 @@
+# vless：默认传输层是TCP，支持tcp/ws/http/h2/grpc/xhttp，不配置默认为tcp
+
+# 配置
+# xtls-rprx-vision仅在tcp传输协议中生效，转为VLESS + TCP + TLS/REALITY下的TCP封包、解包上做的优化，减少操作降低CPU占用
+# flow：xtls-rprx-vision

@@ -1,0 +1,9 @@
+# xtcp
+# 
+
+# xtls
+# 在TCP + TLS/REALITY伪装协议上，对TLS伪装封包、解包上进行优化，达到更低的CPU利用率
+
+# xhttp
+# 基于tcp传输层之上的应用层协议，很像http但不完全一致
+
