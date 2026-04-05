@@ -83,6 +83,11 @@ function initModify(config) {
     group.url = "https://www.cloudflarestatus.com";
   }
 
+  // 增加utf选项，尽可能减少RTT握手
+  for (const proxy of config.proxies) {
+    proxy.tfo = true;
+  }
+
   // 修改第一个分组的内容
   const firstGroupList = config.proxies.filter((item) => item.name.match(/HK|JP|SP|香港|日本|新加坡/gi)).map((item) => item.name);
   config["proxy-groups"][0] = {
