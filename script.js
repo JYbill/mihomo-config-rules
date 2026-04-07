@@ -12,16 +12,6 @@ function main(config, profileName) {
   // 初始化更新配置
   initModify(config);
 
-  // 修改第一个分组的内容
-  const firstGroupList = config.proxies.filter((item) => item.name.match(/HK|JP|SP|香港|日本|新加坡/gi)).map((item) => item.name);
-  config["proxy-groups"][0] = {
-    name: activeProfileName,
-    type: "select",
-    proxies: firstGroupList,
-    url: "https://dash.cloudflare.com",
-    interval: 86400,
-  };
-
   // AI代理
   const { name: aiGroup } = loadAiProxyGroup(config);
   // 美国代理
@@ -93,7 +83,7 @@ function initModify(config) {
   const firstGroupList = config.proxies.filter((item) => item.name.match(/HK|JP|SP|香港|日本|新加坡/gi)).map((item) => item.name);
   config["proxy-groups"][0] = {
     name: activeProfileName,
-    type: "url-test",
+    type: "select",
     proxies: firstGroupList,
     url: "https://dash.cloudflare.com",
     interval: 86400,
