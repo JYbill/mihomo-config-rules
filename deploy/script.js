@@ -80,6 +80,7 @@ function initModify(config) {
   const activeProfileName = firstGroupName;
   for (const group of config["proxy-groups"]) {
     if (!["fallback", "url-test", "load-balance"].includes(group.type)) continue;
+    group.type = "fallback";
     group.url = "https://www.cloudflarestatus.com";
   }
 
@@ -107,7 +108,7 @@ function loadAiProxyGroup(config) {
   const aiGroup = "🤖 AI专属";
   config["proxy-groups"].unshift({
     name: aiGroup,
-    type: "url-test",
+    type: "fallback",
     proxies: aiProxies,
     url: "https://www.anthropic.com/index/claude-2",
     interval: 86400,
@@ -123,7 +124,7 @@ function loadUsaProxyGroup(config) {
   const usaGroup = "🇺🇸 USA";
   config["proxy-groups"].unshift({
     name: usaGroup,
-    type: "url-test",
+    type: "fallback",
     proxies: usaProxies,
     url: "https://labs.google/",
     interval: 86400,
