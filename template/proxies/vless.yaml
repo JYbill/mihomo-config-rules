@@ -1,5 +1,20 @@
 # vless：默认传输层是TCP，支持tcp/ws/http/h2/grpc/xhttp，不配置默认为tcp
 
+# 原理
+# TLS Reality: 不用 CA 证书，改成用一对专属的 Curve25519 密钥对来做验证，所以TLS客户端必须适配Reality逻辑。（⚠️ 开启XTLS则TLS Reality不会再额外加一次密，不开启一定会多加一次；由于访问目标地址已经经过目标服务器的TLS握手且加密过，其他人无法本身无法解密，所以无需多余的这一步）
+# vless：在TLS Reality之后进行 UUID 认证，用于确保是合法用户
+
+# 封包（客户端）
+#TCP
+# └── TLS Reality（Curve25519 密钥对验证，伪装握手特征）
+#     └── VLESS（UUID 认证 + 目标地址）
+#         └── 原始数据（HTTPS 或其他）
+
+# 解包（服务端）
+# 拆 TLS Reality → 拆 VLESS 头部验证 UUID
+# → 判断内层是否已是 TLS（XTLS）
+# → 是则直接透传，否则正常转发
+
 # 配置
-# xtls-rprx-vision仅在tcp传输协议中生效，转为VLESS + TCP + TLS/REALITY下的TCP封包、解包上做的优化，减少操作降低CPU占用
+# xtls-rprx-vision：开启XTLS行为。仅在tcp传输协议中生效，转为VLESS + TCP + TLS/REALITY下的TCP封包、解包上做的优化，减少操作降低CPU占用
 # flow：xtls-rprx-vision
