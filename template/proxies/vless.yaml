@@ -18,3 +18,37 @@
 # 配置
 # xtls-rprx-vision：开启XTLS行为。仅在tcp传输协议中生效，转为VLESS + TCP + TLS/REALITY下的TCP封包、解包上做的优化，减少操作降低CPU占用
 # flow：xtls-rprx-vision
+
+# (XTLS/Xray-core#5067) encryption配置：vless协议之前的加密方式是通过 真实TLS 或 TLS Reality 来完成的。而这个实现则是不依赖它们，在协议本身上直接加密，即ML-KEM-768 + X25519 的混合密钥交换，ML-KEM-768 是 NIST 后量子标准，所以这层加密是抗量子的 👍
+# TCP
+# └── TLS Reality（抗 GFW 探测，流量伪装）
+#     └── VLESS Encryption（ML-KEM-768 + X25519，后量子加密）
+#         └── VLESS header（UUID 认证）
+#             └── 原始数据
+# encryption 与 tls reality 的关系：
+# - tls reality：解决的是流量伪装，看起来像正常 HTTPS
+# - encryption：解决的是加密本身，不用TLS也能有强加密。两者可以组合也可以单独用
+# 1-RTT 是首次握手建立密钥，之后服务端下发 ticket，后续连接可以 0-RTT 复用，不用每次都跑完整握手
+# "mlkem768x25519plus": ML-KEM-768（后量子 KEM）和 X25519（经典椭圆曲线）同时做密钥交换，结果 XOR 合并成最终共享密钥。只有攻破X25519和ML-KEM-768才算破此内容，所以安全性极高
+# "native/xorpub/random"：三选一
+# - native 长得像 TLSv1.3 数据帧头部（23 03 03开头）
+# - xorpub 用公钥做XOR混淆
+# - random 完全随机字节流，无任何可识别的特征
+# "600s/0s"： 600s表示服务端每次随机下发300-600秒有效的ticket（取50%-100%）；0s表示禁用ticket，每次都强制走1RTT完成握手得到会话密钥
+# "padding概率.最小值.最大值 100-111-1111.75-0-111.50-0-3333"：以 100% 概率追加 111-1111 字节随机 padding，以 75% 概率等待 0-111 毫秒，以 50% 概率再追加 0-3333 字节 padding（目的是消除握手包的长度特征，让流量时序看起来更随机。只作用于 1-RTT 握手阶段，不影响后续数据传输性能）。padding必须是一个32长度的字符串包括`.`字符在内
+# > padding参数，服务端控制的是服务端发出的数据包，客户端控制的是客户端发出的数据包，互不干扰。
+# "(X25519 PrivateKey).(ML-KEM-768 Seed)"：都是base64编码的
+# - X25519 PrivateKey：mihomo generate vless-x25519生成
+# - ML-KEM-768 Seed：mihomo generate vless-mlkem768生成
+decryption: "mlkem768x25519plus.native/xorpub/random.600s(300-600s)/0s.100-111-1111.75-0-111.50-0-3333.(X25519 PrivateKey).(ML-KEM-768 Seed)..."
+
+# ⚠️ TLS配置与reality-config冲突
+certificate: ./server.crt
+private-key: ./server.key
+# reality-config：⚠️ 与certificate和private-key（真实TLS）冲突，二选一
+
+# 注意：vless 验证考的是username + uuid + 公钥 + short-id + servername
+# UUID 是唯一的用户身份凭证，这才是真正的 VLESS 认证。服务端靠它判断"这个人有没有权限用我的代理"，UUID 错了直接拒绝。
+# public-key + short-id 是 Reality 握手的前提条件，不是用户认证，而是"你是不是 Reality 客户端"的验证。short-id 不匹配→服务端当普通 TLS 客户端处理，回落真实网站；public-key 不对→Curve25519 握手失败，根本建不起来连接。
+# servername（server-names 里配置的域名）也是必须匹配的，Reality 用它做 SNI 伪装，客户端配置的 servername 必须在服务端的白名单里。
+# username，那是服务端 inbound 配置里的标签字段，客户端侧根本不用配，也不参与握手。
