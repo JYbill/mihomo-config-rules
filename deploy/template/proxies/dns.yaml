@@ -1,1 +1,16 @@
 # ⚠️ dns出站仅代理dns请求，不会处理TCP/UDP应用层的请求
+
+# 🌰 例子：对于出口端口为53（DNS查询）时，走mihomo自身的dns查询，完成后会继续向下匹配rules由其他rule决定是走代理还是直连
+proxies:
+  - name: dns-out
+    type: dns
+
+dns:
+  enable: true
+  enhanced-mode: redir-host
+  nameserver:
+    - https://doh.360.cn/dns-query
+
+rules:
+  - DST-PORT,53,dns-out
+  - MATCH,DIRECT
