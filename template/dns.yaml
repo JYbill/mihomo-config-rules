@@ -3,7 +3,8 @@ dns:
   cache-algorithm: arc
   enable: false # 关闭将使用系统 DNS
   prefer-h3: false # 是否开启 DoH 支持 HTTP/3，将并发尝试
-  listen: 0.0.0.0:53 # 开启 DNS 服务器监听
+  # mihomo DNS监听地址
+  listen: 127.0.0.1:7874
   # ipv6: false # false 将返回 AAAA 的空结果
   # ipv6-timeout: 300 # 单位：ms，内部双栈并发时，向上游查询 AAAA 时，等待 AAAA 的时间，默认 100ms
   # 用于解析 nameserver，fallback 以及其他 DNS 服务器配置的，DNS 服务域名
@@ -58,9 +59,9 @@ dns:
   #   - 'tcp://1.1.1.1#ProxyGroupName' # 指定 DNS 过代理查询，ProxyGroupName 为策略组名或节点名，过代理配置优先于配置出口网卡，当找不到策略组或节点名则设置为出口网卡
 
   # 专用于节点域名解析的 DNS 服务器，非必要配置项
-  # proxy-server-nameserver:
-  # - https://dns.google/dns-query
-  # - tls://one.one.one.one
+  proxy-server-nameserver:
+    # 注意，该地址能够拿到host配置的别名，对于proxies有些服务商可能会用这种读取host的写法
+    - udp://127.0.0.1:7874
 
   # 配置 fallback 使用条件
   # fallback-filter:
