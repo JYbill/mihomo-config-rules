@@ -72,6 +72,7 @@ dns:
     "rule-set:icloud,apple,direct,applications": [114.114.114.114]
     "geosite:gfw,greatfire": [tls://1.0.0.1, tls://8.8.4.4] # 对geosite中的gfw、greatfire
     "rule-set:gfw": [tls://1.0.0.1, tls://8.8.4.4]
+    "+.xxxx.ts.net": [100.100.100.100#utun11] # 使用utun11虚拟网卡查询100.100.100.100 DNS
   # 直连dns是否遵守nameserver-policy配置，只有设置了direct-nameserver才生效，也就是nameserver-policy优先级更高
   direct-nameserver-follow-policy: true
   # 默认DNS
