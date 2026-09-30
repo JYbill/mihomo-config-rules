@@ -30,9 +30,12 @@ tun:
 # https://223.5.5.5/dns-query (310ms)
 # https://223.6.6.6/dns-query (312ms)
 # 360
-# - tls://1.12.12.12
-# - tls://218.30.118.6
-# - https://doh.360.cn/dns-query
+# tls://dot.360.cn
+# tls://101.226.4.6
+# tls://218.30.118.6
+# https://doh.360.cn/dns-query
+# https://101.226.4.6/dns-query
+# https://218.30.118.6/dns-query
 # GoogleDNS
 # tls://8.8.8.8
 # tls://dns.google
@@ -49,7 +52,7 @@ dns:
   ipv6: true
   fake-ip-range6: 2001:2::1/64
   use-hosts: true
-  # dns根据rules代理，让代理服务器帮助走nameserver、fallback...
+  # 将*nameserver的dot、doh、dns配置走rules从而让代理节点发起dns查询
   respect-rules: false
   cache-algorithm: lru
   enhanced-mode: fake-ip
@@ -58,9 +61,10 @@ dns:
   # fake-ip-filter:
   # - 1.1.1.1
   default-nameserver: # 兜底nameserver、proxy-server-nameserver DNS是域名的情况如tls://域名（DOT、DOH）
-    - tls://one.one.one.one
-    - https://cloudflare-dns.com/dns-query
     - tls://8.8.4.4
+    - tls://101.226.4.6
+    - tls://1.12.12.12
+    - tls://218.30.118.6
   proxy-server-nameserver:
     - tls://1.12.12.12
     - tls://218.30.118.6
