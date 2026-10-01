@@ -1,13 +1,14 @@
 # vless：默认传输层是TCP，支持tcp/ws/http/h2/grpc/xhttp，不配置默认为tcp
 
 # 原理
-# TLS Reality: 不用 CA 证书，改成用一对专属的 Curve25519 密钥对来做验证，所以TLS客户端必须适配Reality逻辑。（⚠️ 开启XTLS则TLS Reality不会再额外加一次密，不开启一定会多加一次；由于访问目标地址已经经过目标服务器的TLS握手且加密过，其他人无法本身无法解密，所以无需多余的这一步）
+# TLS Reality: 用Curve25519非对称密钥，clash客户端与代理互相配置好对方的身份公钥，连接时互相发送生成的临时公钥，协商出一致的会话密钥，后续的所有数据包都用该密钥再加一次密
+  #⚠️ 开启XTLS则TLS Reality对于TLS数据包不会再加密因为已经有合法的TLS特征，对于非TLS仍然会加密伪造TLS特征。
 # vless：在TLS Reality之后进行 UUID 认证，用于确保是合法用户
 
 # 封包（客户端）
 #TCP
 # └── TLS Reality（Curve25519 密钥对验证，伪装握手特征）
-#     └── VLESS（UUID 认证 + 目标地址）
+#     └── VLESS（UUID 认证 + 目标地址。这里并不会改变TLS数据包的特征，所以TLS Reality仍然能识别出是否为TLS数据）
 #         └── 原始数据（HTTPS 或其他）
 
 # 解包（服务端）
