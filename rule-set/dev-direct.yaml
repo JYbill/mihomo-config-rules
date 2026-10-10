@@ -10,5 +10,3 @@ payload:
   - DOMAIN-SUFFIX,jsdelivr.com
   - DOMAIN-SUFFIX,vplay.life
   - DOMAIN-SUFFIX,qq.com
-  # ipv6.itdog.cn 及其子域名走直连。
-  - DOMAIN-SUFFIX,ipv6.itdog.cn
