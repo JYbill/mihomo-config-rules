@@ -3,6 +3,8 @@ payload:
   - DOMAIN-SUFFIX,icoa.vip
   - DOMAIN-SUFFIX,colab.dev
   - DOMAIN-SUFFIX,app.warp.dev
+  # ipv6.itdog.cn 及其子域名使用日常国外规则组。
+  - DOMAIN-SUFFIX,ipv6.itdog.cn
   
   - DOMAIN-KEYWORD,vercel
   - DOMAIN-KEYWORD,devtunnels
