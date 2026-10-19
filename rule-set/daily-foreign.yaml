@@ -16,3 +16,11 @@ payload:
   - PROCESS-NAME,verge-mihomo
   - PROCESS-NAME,Raycast
   - PROCESS-NAME,Discord Helper
+  - PROCESS-NAME,tailscale
+  - PROCESS-NAME,tailscale.exe
+  - PROCESS-NAME,tailscaled
+  - PROCESS-NAME,tailscaled.exe
+  - PROCESS-NAME,Tailscale
+  - PROCESS-NAME,Tailscale.exe
+  - PROCESS-NAME,io.tailscale.ipn.macsys.network-extension
+  - PROCESS-NAME,io.tailscale.ipn.macos.network-extension
