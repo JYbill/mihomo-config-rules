@@ -1,0 +1,36 @@
+# XUDP 与 Hysteria2
+#
+# packet-encoding 是 VLESS 的 UDP 数据包编码方式。留空时使用原始编码，
+# 也可以选择 xudp；使用 xudp 时，服务端需要支持该编码。
+#
+# 当 VLESS 使用 network: tcp 时，代理的 UDP 数据会封装在 TCP 连接中传输。
+# xudp 不改变客户端到服务器的传输协议，也不需要额外开放 UDP 端口。
+# VLESS + Vision 需要转发 UDP 时，可以按 Mihomo 官方示例配置 packet-encoding: xudp。
+#
+# Hysteria2 基于 QUIC，客户端与服务器之间使用 UDP，可以代理应用的 TCP 和 UDP 流量。
+# packet-encoding 是这里的 VLESS 配置项，不影响 Hysteria2 节点。
+# 同时使用 VLESS over TCP 和 Hysteria2 时，需要分别放行对应的 TCP 和 UDP 端口；
+# 两种协议可以使用相同的端口号。
+#
+# 参考：
+# https://github.com/metacubex/meta-docs/blob/main/docs/config/proxies/vless.md
+# https://github.com/metacubex/meta-docs/blob/main/docs/config/proxies/hysteria2.md
+
+# Hysteria2 客户端 TLS 配置
+#
+# sni：TLS 握手使用的服务器名称，通常填写域名。
+# 如果填写 IP 字面量，通常不会将该 IP 作为 SNI 扩展中的主机名发送。
+#
+# fingerprint：服务器证书的 SHA-256 指纹，用于固定并验证证书。
+# 更换证书后，需要将客户端指纹更新为新证书的指纹。
+#
+# skip-cert-verify: false：不主动跳过证书验证。
+# 当固定的是服务器叶子证书的指纹时，Mihomo 只校验证书指纹，
+# 不额外校验证书链、名称和有效期。中间证书或根证书的指纹校验规则不同。
+#
+# alpn: [h3]：TLS 握手时协商 h3 应用层协议标识。
+# 客户端和服务端的 ALPN 列表需要有相同的标识。
+#
+# 参考：
+# https://github.com/metacubex/meta-docs/blob/main/docs/config/proxies/tls.md
+# https://github.com/metacubex/meta-docs/blob/main/docs/config/inbound/listeners/hysteria2.md
